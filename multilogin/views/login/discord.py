@@ -25,7 +25,6 @@ class DiscordRedirectView(View):
         register = request.session.get("register", False)
         request.session["register"] = False
         token = discord.authorize_access_token(request)
-        print(token)
         resp = discord.get("users/@me", token=token)
         resp.raise_for_status()
         resp_json = resp.json()
@@ -47,9 +46,6 @@ class DiscordRedirectView(View):
                 expires=timezone.datetime.fromtimestamp(token["expires_at"])
             )
             discord_login.save()
-            user = authenticate(discord_user_id=discord_user_id)
-            print(user)
-            print(user.backend)
             login(request, authenticate(discord_user_id=discord_user_id))
             return redirect("/")
         return redirect("/")
