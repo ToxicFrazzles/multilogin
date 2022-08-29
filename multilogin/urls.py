@@ -1,9 +1,10 @@
 from django.urls import path, include
-from .views.login import urls as login_urls
-
+from .multilogin.main import create_urlpatterns, enabled_backends
 
 app_name = "multilogin"
 
-urlpatterns = [
-    path("login/", include(login_urls)),
-]
+urlpatterns = []
+
+for backend in enabled_backends():
+    backend_urls = create_urlpatterns(backend)
+    urlpatterns.append(path(f"{backend.NAME}/", include(backend_urls)))

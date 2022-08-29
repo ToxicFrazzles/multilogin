@@ -1,1 +1,1 @@
-from .discord_login import DiscordLogin
+from .oauth_token import OAuthToken

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multilogin Demo</title>
+</head>
+<h3>Multilogin Demo</h3>
+{% if user.is_authenticated %}
+<p>You are logged in as {{ user }}</p>
+{% else %}
+<p>You are not logged in.</p>
+{% endif %}
+
+<p>{{ info.identifier }}</p>
+<p>{{ info.username }}</p>
+</html>

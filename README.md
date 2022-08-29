@@ -1,6 +1,10 @@
 # Multilogin
 Django app that provides Oauth2 based login
 
+DO NOT USE. 
+
+This is currently highly work-in-progress and breaking changes are being made. 
+You have been warned.
 
 ## Usage
 This can be used in a Django project as well as or instead of the default authentication backend.
