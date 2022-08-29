@@ -2,7 +2,6 @@ from django.conf import settings
 from django.urls import path
 from authlib.integrations.django_client import OAuth
 from multilogin.models import OAuthToken
-from ..views import LoginView, RedirectView
 from . import backends
 
 
@@ -28,24 +27,6 @@ def fetch_token(name, request):
 
 
 oauth = OAuth(fetch_token=fetch_token)
-
-
-def create_urlpatterns(backend):
-    if isinstance(backend, str):
-        backend = getattr(backends, backend)
-    backend.OAUTH_CONFIG.update(
-        client_id=getattr(settings, f"{backend.NAME.upper()}_CLIENT_ID", None),
-        client_secret=getattr(settings, f"{backend.NAME.upper()}_CLIENT_SECRET", None)
-    )
-    third_party = oauth.register(
-        backend.NAME,
-        False,
-        **backend.OAUTH_CONFIG
-    )
-    return [
-        path('', LoginView.as_view(backend=third_party), name=f'{backend.NAME}_login'),
-        path('redirect/', RedirectView.as_view(backend=third_party), name=f'{backend.NAME}_redirect'),
-    ]
 
 
 def enabled_backends():
