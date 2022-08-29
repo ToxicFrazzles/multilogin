@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Multilogin Demo</title>
-</head>
-<h3>Multilogin Demo</h3>
+{% extends "base.html" %}
+
+
+{% block content %}
 {% if user.is_authenticated %}
 <p>You are logged in as {{ user }}</p>
 {% else %}
@@ -12,4 +10,4 @@
 
 <p>{{ info.identifier }}</p>
 <p>{{ info.username }}</p>
-</html>
+{% endblock %}

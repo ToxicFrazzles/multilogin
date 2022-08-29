@@ -7,7 +7,8 @@ class LoginView(View):
 
     def get(self, request):
         redirect_uri = request.build_absolute_uri(reverse(f"multilogin:{self.backend.name}_redirect"))
-        request.session["next"] = request.GET.get("next", None)
+        if "next" in request.GET:
+            request.session["next"] = request.GET.get("next", "/")
         return self.backend.authorize_redirect(
             request, redirect_uri
         )

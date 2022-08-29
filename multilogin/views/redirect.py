@@ -11,12 +11,12 @@ class RedirectView(View):
 
     def get(self, request):
         next_page = request.session.get("next", "/")
-        request.session["next"] = None
+        request.session.pop("next", None)
         token = self.backend.authorize_access_token(request)
         userinfo = get_user_info(self.backend.name, token=token)
         if not userinfo.identifier:
-            return redirect(next_page or "/")
-        user = authenticate(auth_provider=self.backend.name, identifier=f"userinfo.identifier")
+            return redirect(next_page)
+        user = authenticate(auth_provider=self.backend.name, identifier=userinfo.identifier)
         if user:
             login(request, user)
             return redirect(next_page)

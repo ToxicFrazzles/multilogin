@@ -12,3 +12,11 @@ class OAuthToken(models.Model):
     refresh_token = models.TextField()
     expires_at = models.DateTimeField()
 
+    def to_token(self):
+        return {
+            "name": self.provider,
+            "access_token": self.access_token,
+            "refresh_token": self.refresh_token,
+            "expires_at": self.expires_at.timestamp()
+        }
+
