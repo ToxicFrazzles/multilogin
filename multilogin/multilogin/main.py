@@ -46,7 +46,8 @@ def get_user_info(name, **kwargs):
     backend = next((i for i in available_backends if i.NAME == name), None)
     resp = remote.get(backend.OAUTH_CONFIG['userinfo_endpoint'], **kwargs)
     resp.raise_for_status()
-    return backend.OAUTH_CONFIG['userinfo_compliance_fix'](remote, resp.json())
+    info = backend.OAUTH_CONFIG['userinfo_compliance_fix'](remote, resp.json())
+    return info
 
 
 def register_user(request, **kwargs):

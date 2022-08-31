@@ -17,6 +17,6 @@ def create_urlpatterns(backend, oauth):
         **backend.OAUTH_CONFIG
     )
     return [
-        path('', LoginView.as_view(backend=third_party), name=f'{backend.NAME}_login'),
+        path('', LoginView.as_view(backend=third_party), name=f'{backend.NAME}'),
         path('redirect/', RedirectView.as_view(backend=third_party), name=f'{backend.NAME}_redirect'),
     ]

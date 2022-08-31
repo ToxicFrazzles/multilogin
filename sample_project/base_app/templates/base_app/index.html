@@ -2,12 +2,19 @@
 
 
 {% block content %}
-{% if user.is_authenticated %}
-<p>You are logged in as {{ user }}</p>
-{% else %}
-<p>You are not logged in.</p>
-{% endif %}
+    {% if user.is_authenticated %}
+        <p>You are logged in as {{ user }}</p>
+    {% else %}
+        <p>You are not logged in.</p>
+    {% endif %}
 
-<p>{{ info.identifier }}</p>
-<p>{{ info.username }}</p>
+    {% if info %}
+        <p>{{ info.identifier }}</p>
+        <p>{{ info.username }}</p>
+    {% endif %}
+
+    {% for url,name,title in logins %}
+        <a href="{{url}}">Log in with {{ title }}</a><br/>
+    {% endfor %}
+    <a href="{% url 'logout' %}">Log Out</a>
 {% endblock %}

@@ -1,16 +1,27 @@
-from django.contrib.auth import get_user_model, login
-from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model, login, logout
+from django.shortcuts import render, redirect, reverse
 from django.views import View
 
-from multilogin.multilogin import get_user_info, register_user
+from multilogin.multilogin import get_user_info, register_user, enabled_backends
 
 User = get_user_model()
 
 
 class IndexView(View):
     def get(self, request):
-        info = get_user_info("discord", request=request)
-        return render(request, "base_app/index.html", context={'info': info})
+        try:
+            info = get_user_info("discord", request=request)
+        except:
+            info = None
+
+        logins = [
+            (
+                reverse(f"multilogin:{backend.NAME}"),
+                backend.NAME,
+                backend.NAME.capitalize()
+            ) for backend in enabled_backends()
+        ]
+        return render(request, "base_app/index.html", context={'info': info, "logins": logins})
 
 
 class RegistrationView(View):
@@ -32,4 +43,12 @@ class RegistrationView(View):
         if not user:
             return redirect("register")
         login(request, user)
+        return redirect("/")
+
+
+class LogOutView(View):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("/")
+        logout(request)
         return redirect("/")
