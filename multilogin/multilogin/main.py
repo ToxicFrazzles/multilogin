@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.urls import path
+from django.contrib.auth import get_user_model
+from django.utils.timezone import datetime
 from authlib.integrations.django_client import OAuth
 from multilogin.models import OAuthToken
 from . import backends
@@ -8,6 +9,9 @@ from . import backends
 available_backends = [
     backends.Discord
 ]
+
+
+User = get_user_model()
 
 
 def fetch_token(name, request):
@@ -43,3 +47,30 @@ def get_user_info(name, **kwargs):
     resp = remote.get(backend.OAUTH_CONFIG['userinfo_endpoint'], **kwargs)
     resp.raise_for_status()
     return backend.OAUTH_CONFIG['userinfo_compliance_fix'](remote, resp.json())
+
+
+def register_user(request, **kwargs):
+    if "token" in kwargs and "backend" in kwargs:
+        token = kwargs.pop("token")
+        provider = kwargs.pop("backend")
+    elif "oauth" in request.session:
+        token = request.session["oauth"]
+        provider = token["name"]
+        kwargs.pop("token", None)
+        kwargs.pop("backend", None)
+    else:
+        return None
+    user = User(**kwargs)
+    user.save()
+    info = get_user_info(provider, token=token)
+    token = OAuthToken(
+        owner=user,
+        provider=provider,
+        identifier=info.identifier,
+        access_token=token.get("access_token"),
+        refresh_token=token.get("refresh_token"),
+        expires_at=datetime.fromtimestamp(token.get("expires_at"))
+    )
+    token.save()
+    user.backend = "multilogin.auth_backend.MultiloginBackend"
+    return user
