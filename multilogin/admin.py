@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import OAuthToken
 
-# Register your models here.
+
+@admin.register(OAuthToken)
+class OAuthTokenAdmin(admin.ModelAdmin):
+    pass

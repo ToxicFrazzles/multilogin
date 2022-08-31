@@ -12,6 +12,13 @@ class OAuthToken(models.Model):
     refresh_token = models.TextField()
     expires_at = models.DateTimeField()
 
+    class Meta:
+        verbose_name = "OAuth Token"
+        verbose_name_plural = "OAuth Tokens"
+
+    def __str__(self):
+        return f"{self.owner}"
+
     def to_token(self):
         return {
             "name": self.provider,
