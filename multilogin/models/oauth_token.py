@@ -17,7 +17,7 @@ class OAuthToken(models.Model):
         verbose_name_plural = "OAuth Tokens"
 
     def __str__(self):
-        return f"{self.owner}"
+        return f"{self.owner}: {self.provider}"
 
     def to_token(self):
         return {
