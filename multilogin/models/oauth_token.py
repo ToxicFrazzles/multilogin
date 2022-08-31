@@ -8,7 +8,7 @@ class OAuthToken(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
     provider = models.CharField(max_length=32, db_index=True)
     identifier = models.CharField(max_length=128, db_index=True)
-    access_token = models.TextField()
+    access_token = models.TextField(null=True, default=None)
     refresh_token = models.TextField()
     expires_at = models.DateTimeField()
 

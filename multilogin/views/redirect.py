@@ -1,8 +1,9 @@
 from django.views import View
 from django.shortcuts import reverse, resolve_url, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.http.response import HttpResponseRedirect
 from django.conf import settings
+from django.utils.timezone import datetime
 from ..multilogin.main import get_user_info
 from ..models import OAuthToken
 
@@ -22,11 +23,14 @@ class RedirectView(View):
                 owner=request.user,
                 provider=self.backend.name,
                 identifier=userinfo.identifier,
-                **token
+                access_token=token.get("access_token", None),
+                refresh_token=token.get("refresh_token"),
+                expires_at=datetime.fromtimestamp(token.get("expires_at"))
             )
             db_token.save()
             request.user.set_unusable_password()
             request.user.save()
+            update_session_auth_hash(request, request.user)
             return redirect(next_page)
         user = authenticate(
             auth_provider=self.backend.name,
