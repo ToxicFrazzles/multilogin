@@ -14,6 +14,11 @@ available_backends = [
 User = get_user_model()
 
 
+SECRET_MAX_LENGTHS = {
+    "DISCORD": 32
+}
+
+
 def fetch_token(name, request):
     if request.user.is_authenticated:
         try:
@@ -37,6 +42,9 @@ def enabled_backends():
     for backend in available_backends:
         client_id = getattr(settings, f"{backend.NAME.upper()}_CLIENT_ID", None)
         client_secret = getattr(settings, f"{backend.NAME.upper()}_CLIENT_SECRET", None)
+        if backend.NAME.upper() in SECRET_MAX_LENGTHS and len(client_secret) > SECRET_MAX_LENGTHS[backend.NAME.upper()]:
+            raise ValueError(f"{backend.NAME} client secret seems too long. Please double check that is the correct secret.")
+
         if client_id is not None and client_secret is not None:
             yield backend
 
