@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import multilogin.urls
-import base_app.urls
+from .views import IndexView, RegistrationView, LogOutView
+
+app_name = "base_app"
 
 urlpatterns = [
-    path('', include(base_app.urls)),
-    path('auth/', include(multilogin.urls)),
-    path('admin/', admin.site.urls),
+    path('', IndexView.as_view(), name='index'),
+    path('register/', RegistrationView.as_view(), name="register"),
+    path('logout/', LogOutView.as_view(), name="logout"),
+    path('auth/', include(multilogin.urls))
 ]

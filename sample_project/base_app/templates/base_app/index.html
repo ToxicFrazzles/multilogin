@@ -16,5 +16,5 @@
     {% for url,name,title in logins %}
         <a href="{{url}}">Log in with {{ title }}</a><br/>
     {% endfor %}
-    <a href="{% url 'logout' %}">Log Out</a>
+    <a href="{% url 'base_app:logout' %}">Log Out</a>
 {% endblock %}
