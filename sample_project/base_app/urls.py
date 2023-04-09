@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import multilogin.urls
-from .views import IndexView, RegistrationView, LogOutView
+from .views import IndexView, RegistrationView, LogOutView,LoginRequiredView
 
 app_name = "base_app"
 
@@ -24,5 +24,6 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('register/', RegistrationView.as_view(), name="register"),
     path('logout/', LogOutView.as_view(), name="logout"),
-    path('auth/', include(multilogin.urls))
+    path('auth/', include(multilogin.urls)),
+    path('login_required/', LoginRequiredView.as_view(), name="login_required"),
 ]
